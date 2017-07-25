@@ -6,9 +6,8 @@ $ComputeURL='';
 function GetTokens()
 {
         // create curl resource 
-        $ch = curl_init(); 
-	$data_string = '{"auth":{"identity":{"methods":["password"],"password":{"user":{"name":"admin","domain":{"name":"Default"},"password":"VeryLongKeystoneAdminPassword"}}}}}';
-
+        $ch = curl_init();
+	$data_string = file_get_contents ( 'Post.json' ); 
 
         // set url 
         curl_setopt($ch, CURLOPT_URL, "https://keystone.cord.lab:5000/v3/auth/tokens"); 
