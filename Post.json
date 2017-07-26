@@ -1,0 +1,1 @@
+{"auth":{"identity":{"methods":["password"],"password":{"user":{"name":"admin","domain":{"name":"Default"},"password":"VeryLongKeystoneAdminPassword"}}}}}
