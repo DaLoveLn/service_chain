@@ -33,7 +33,7 @@ function GetTokens()
         // $output contains the output string 
         $output = curl_exec($ch); 
 	//get headers Token
-	//echo $output;
+//	echo $output;
 	
 	list($headers, $response) = explode("\r\n\r\n", $output, 2);
 	$headers = explode("\n", $headers);
@@ -58,9 +58,22 @@ function GetTokens()
 	$output2 = curl_exec($ch);
 
 	$Temp=json_decode($output2);
-	$GLOBALS['ComputeURL'] = $Temp->token->catalog[3]->endpoints[1]->url;
-	//echo $ComputeURL;
+	//echo $output2 . '<br>';
 
+//	echo count( $Temp->token->catalog);
+	for( $i=0 ; $i< count( $Temp->token->catalog) ; $i++)
+	{
+		//echo $Temp->token->catalog[$i]->name;
+		if (strpos($Temp->token->catalog[$i]->name, 'nova') !== false) 
+		{
+			$GLOBALS['ComputeURL'] = $Temp->token->catalog[$i]->endpoints[1]->url;	
+		}
+	}
+
+
+//	$GLOBALS['ComputeURL'] = $Temp->token->catalog[1]->endpoints[1]->url;
+	//echo $ComputeURL;
+	//echo $GLOBALS['ComputeURL'];
 
 	//echo $output2;
         curl_close($ch);      
@@ -87,7 +100,7 @@ function GetServers()
 //	echo "$URL/servers" .  '<br>';
 	//echo $GLOBALS['ComputeURL'] . '/servers'; 
         // set url 
-        curl_setopt($ch2, CURLOPT_URL,  "$URL/servers" );
+        curl_setopt($ch2, CURLOPT_URL,  "$URL/servers/detail" );
 
         //return the transfer as a string 
         curl_setopt($ch2, CURLOPT_HEADER, false);
@@ -113,7 +126,7 @@ function GetServers()
 
         // $output contains the output string 
         $output = curl_exec($ch2);
-        //echo $output;
+//        echo $output;
 
         // close curl resource to free up system resources 
         curl_close($ch2);
@@ -122,5 +135,49 @@ function GetServers()
 }
 //GetServers();
 
+function GetImage($ImageID)
+{
+	GetTokens();
+	
+	//$ImageID = '3f7dc69a-a757-43a5-add8-726ccdabbc71';
+
+        // create curl resource 
+        $ch3 = curl_init();
+//        $URL =  $GLOBALS['ComputeURL'];
+	$URL   = preg_replace('~\r\n?~', "", sprintf("%s/images/%s",$GLOBALS['ComputeURL'],$ImageID));
+//      echo "$URL/servers" .  '<br>';
+        //echo $GLOBALS['ComputeURL'] . '/servers'; 
+        // set url 
+        curl_setopt($ch3, CURLOPT_URL,  $URL );
+
+        //return the transfer as a string 
+        curl_setopt($ch3, CURLOPT_HEADER, false);
+        curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
+
+        //ignore ssl cert
+        curl_setopt($ch3, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch3, CURLOPT_SSL_VERIFYPEER, false);
+	
+        //Header
+        //replace special char (0x0a 0x0d)
+        $Tokens = preg_replace('~\r\n?~', "", sprintf("X-Auth-Token: %s ",$GLOBALS['TokenString']));
+//	$Tokens = 'X-Auth-Token: d802ef7ec0454271b7b1aa30a7309137';
+
+        //byte test
+
+//      echo '<br>' . $Tokens . '<br>';
+        curl_setopt($ch3, CURLOPT_HTTPHEADER, array( $Tokens ));
+
+	$output = curl_exec($ch3);
+	//echo $output;
+
+        // close curl resource to free up system resources 
+        curl_close($ch3);
+
+        return json_decode($output)->image->name;
+	
+
+}
+//GetImage();
 
 ?>

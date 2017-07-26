@@ -1,1 +1,13 @@
-{"auth":{"identity":{"methods":["password"],"password":{"user":{"name":"admin","domain":{"name":"Default"},"password":"VeryLongKeystoneAdminPassword"}}}}}
+{"auth":
+	{"identity":
+		{"methods":
+			["password"],
+		"password":{"user":
+				{"name":"test",
+				"domain":{"name":"Default"},
+				"password":"test"
+				}
+			}
+		}
+	}
+}
