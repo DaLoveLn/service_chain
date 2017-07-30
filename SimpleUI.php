@@ -2,6 +2,26 @@
 <html>
 <head>
 	<title> Simple Service Chain</title>
+	<!--<link rel="stylesheet" href="next/dest/css/next.css">
+	<script src="next/dest/js/next.js"></script>
+	<script src="Data.js"></script> -->
+
+	<!-- <script>
+	var topologyData = {                                      
+    nodes: [                                              
+        {"id": 0, "x": 400, "y": 100, "name": "12K-1"},   
+        {"id": 1, "x": 500, "y": 100, "name": "12K-2"},   
+        {"id": 2, "x": 600, "y": 100, "name": "Of-9k-03"},
+    ],                                                    
+    links: [                                              
+        {"source": 0, "target": 1},                       
+        {"source": 1, "target": 2},                       
+        {"source": 2, "target": 3},                       
+    ]                                                     
+};                                                        
+
+	</script> -->
+	 <script src="Shell.js"></script> 
 
 	<style type="text/css">
           .end-element { background-color : #FFCCFF; }
@@ -115,7 +135,7 @@ $count = 1;
 //echo $_SESSION['arrName'][0];
 for($val=0;$val<count( $_SESSION['arrName']) ; $val++)
 {
-	echo nl2br(sprintf("op%s=>operation: %s|past:>http://www.google.com[blank]\n",$val,$_SESSION['arrName'][$val]));
+	echo nl2br(sprintf("op%s=>operation: %s|approved:>http://www.google.com[blank]\n",$val,$_SESSION['arrName'][$val]));
 //	echo nl2br('op'.$val.'=>operation: ' . $_SESSION['arrName'][$val] . '\n');
 }
 //array_push($_SESSION['arrName'],'CiaB');
@@ -125,12 +145,71 @@ for($val=0;$val<count( $_SESSION['arrName'])-1 ; $val++)
         echo nl2br(sprintf("op%s(right)->op%s\n",$val,$val+1));
 //      echo nl2br('op'.$val.'=>operation: ' . $_SESSION['arrName'][$val] . '\n');
 }
-
-
 ?>
 </textarea></div>
 <div  style="display:none"><button id="run" type="button">Show Graph</button></div>
 <div id="canvas"></div>
+
+<?php
+session_start();
+
+echo <<<EOF
+
+        <link rel="stylesheet" href="next/dest/css/next.css">
+        <script src="next/dest/js/next.js"></script>
+EOF;
+//        <script src="Data.js"></script>
+
+
+echo '<script>';
+echo 'var topologyData = {                                      ';
+echo '    nodes: [                                              ';
+
+for($val=0;$val<count( $_SESSION['arrName']) ; $val++)
+{
+	echo sprintf('{"id": %d, "x": %d, "y": %d, "name": "%s"}',$val,400+$val*100,400+($val%2)*100,$_SESSION['arrName'][$val]);
+	if($val+1 <count( $_SESSION['arrName']) )
+		echo ',';
+	else
+		echo '],';
+}
+echo 'links: [';
+for($val=0;$val<count( $_SESSION['arrName'])-1 ; $val++)
+{
+	echo sprintf('{"source": %d, "target": %d}',$val,$val+1);
+	if($val+1 <count( $_SESSION['arrName'])-1 )
+                echo ',';
+        else
+                echo ']';
+
+}
+echo '};';
+
+
+
+/*
+echo '        {"id": 0, "x": 400, "y": 500, "name": "mme"},   ';
+echo '        {"id": 1, "x": 500, "y": 400, "name": "spgw"},   ';
+echo '        {"id": 2, "x": 600, "y": 500, "name": "hss"}';
+
+echo '    ],                                                    ';
+echo '    links: [                                              ';
+echo '        {"source": 0, "target": 1},                       ';
+echo '        {"source": 1, "target": 2},                       ';
+echo '        {"source": 2, "target": 3}                       ';
+//echo '        {"source": 3, "target": 4}                       ';
+echo '    ]                                                     ';
+echo '};                                                        ';
+*/
+echo '</script>';
+
+
+
+
+
+?>
+<script src="Shell.js"></script>
+
 </body>
 
 </html>
